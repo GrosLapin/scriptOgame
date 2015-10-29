@@ -101,7 +101,7 @@ function showAlert()
                 var locTab = li.getElementsByClassName('txt_link'); 
                 if (typeof tabCoord[locTab[0].innerHTML] == 'undefined')
                 {
-                    tabCoord[locTab[0].innerHTML] = 0;
+                    tabCoord[locTab[0].innerHTML] = 1;
                 }
                 else
                 {
