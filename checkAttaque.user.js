@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name        Test
+// @name        CheckAttaque
 // @namespace   groslapin_s_136_fr
-// @description test
+// @description Plug in anty bash
 // @include     *ogame.gameforge.com/game/*
-// @version     1
+// @version     1.9
 // @grant       none
 
 // ==/UserScript==
@@ -19,7 +19,7 @@ var li=document.createElement("li");
 li.appendChild(btn);
 
 var barre = document.getElementById("menuTableTools");
-var retour = barre.appendChild(li);
+barre.appendChild(li);
 
 function getMessage(page) {
 return $.ajax({
@@ -70,7 +70,7 @@ function isAppendedToday(date)
 }
 function showAlert()
 {
-    var tabCoord = {};
+    
     var div =  document.getElementById("verificationAttaque");
     div.innerHTML = getMessage(1);
 
@@ -80,6 +80,8 @@ function showAlert()
 
     var cpt = 1;
     var ok = true;
+    var tabCoord = {};
+    var tabCoordHeures = {};
     while (cpt <= maxPage && ok )
     {
         div.innerHTML = getMessage(cpt);
@@ -99,13 +101,16 @@ function showAlert()
             if (isAppendedToday(date.innerHTML))
             {
                 var locTab = li.getElementsByClassName('txt_link'); 
-                if (typeof tabCoord[locTab[0].innerHTML] == 'undefined')
+                var coord = locTab[0].innerHTML;
+                if (typeof tabCoord[coord] == 'undefined')
                 {
-                    tabCoord[locTab[0].innerHTML] = 0;
+                    tabCoord[coord] = 1;
+                    tabCoordHeures[coord] = date.innerHTML +'\n';
                 }
                 else
                 {
-                    tabCoord[locTab[0].innerHTML] += 1;
+                    tabCoord[coord] += 1;
+                    tabCoordHeures[coord] += date.innerHTML  +'\n';
                 }
 
             }
@@ -125,8 +130,20 @@ function showAlert()
     var good = "Vous n'avez attaqué personne 6 fois ou plus dans les 24h.\nBon raid !";
     var notGood = "Vous avez attaqué au moins 6 fois les coordonnées suivantes : ";
     var isGood =true;
+    var coordByNbAttaque = {};
     for (var coord in tabCoord )
     {
+        // pour l'affichage en div
+        if (typeof coordByNbAttaque[tabCoord[coord]] == 'undefined')
+        {
+            coordByNbAttaque[tabCoord[coord]] = '<span title="'+tabCoordHeures[coord]+'">'+coord +'</span> ';
+        }
+        else
+        {
+            coordByNbAttaque[tabCoord[coord]] +='<span title="'+tabCoordHeures[coord]+'">'+coord +'</span> ';
+        }
+
+        // pour l'alert
         if ( tabCoord[coord] >= 6 )
         {
             isGood =false;
@@ -136,6 +153,27 @@ function showAlert()
     }
     if ( isGood ) { alert(good); }
     else { alert(notGood) }
+    // Je triche c'est mal, a maj 
+    var htmlCount = '<div id="promotionCountdownBox"><a class="overlay">';
+
+    for (var count in coordByNbAttaque )
+    {
+        htmlCount += count +' attaques :  <br />' + coordByNbAttaque[count] + ' <br/>';
+    }
+
+    htmlCount += '</a></div>';
+var info = document.createElement("div");
+info.className="adviceWrapper";
+info.innerHTML=htmlCount;
+alert(htmlCount);
+var link = document.getElementById("links");
+link.appendChild(info);
+
+
+
+
+    
+
 }
 
 
