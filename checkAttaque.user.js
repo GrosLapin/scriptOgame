@@ -3,7 +3,7 @@
 // @namespace   groslapin_s_136_fr
 // @description Plug in anty bash
 // @include     *ogame.gameforge.com/game/*
-// @version     2.1
+// @version     2.15
 // @grant       none
 
 // ==/UserScript==
@@ -154,11 +154,14 @@ function showAlert()
 	 
 	if ( isGood ) 
 	{
-			htmlCount += '<span style="font-weight: bold; color: rgb(0, 128, 0); font-size: 16px;">Good</span><br/><br/>';
+			htmlCount += '<span style="font-weight: bold; color: rgb(0, 128, 0); font-size: 16px;">Pas de risque</span><br/>';
+			htmlCount += '<span style="font-weight: bold; color: rgb(0, 128, 0); font-size: 11px;">de bash</span><br/>';
+			htmlCount += '<br/><br/>';
 	}
 	else
 	{
-			htmlCount += '<span style="font-weight: bold; color: rgb(128, 0, 0); font-size: 16px;";">Warning</span><br/><br/>';
+			htmlCount += '<span style="font-weight: bold; color: rgb(128, 0, 0); font-size: 16px;">Risque de bash</span>';
+			htmlCount += '<br/><br/>';
 	}
     for (var count in coordByNbAttaque )
     {
@@ -166,10 +169,17 @@ function showAlert()
         {
             htmlCount += count +' attaque :  <br />' + coordByNbAttaque[count] + ' <br/>';
         }
-        else
+        else if (count < 6 )
         {
             htmlCount += count +' attaques :  <br />' + coordByNbAttaque[count] + ' <br/>'; 
         }
+		else
+		{
+		
+			htmlCount += '<span style="font-weight: bold; color: rgb(128, 0, 0); font-size: 11px;">';
+			htmlCount += count +' attaques :  <br />' + coordByNbAttaque[count] + ' <br/>'; 
+			htmlCount +='</span>';
+		}
     }
 
     htmlCount += '</a></div>';
@@ -179,11 +189,6 @@ info.innerHTML=htmlCount;
 
 var link = document.getElementById("links");
 link.appendChild(info);
-
-
-
-
-    
 
 }
 
