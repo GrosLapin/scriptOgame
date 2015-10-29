@@ -3,7 +3,7 @@
 // @namespace   groslapin_s_136_fr
 // @description Plug in anty bash
 // @include     *ogame.gameforge.com/game/*
-// @version     1.9
+// @version     2
 // @grant       none
 
 // ==/UserScript==
@@ -136,11 +136,11 @@ function showAlert()
         // pour l'affichage en div
         if (typeof coordByNbAttaque[tabCoord[coord]] == 'undefined')
         {
-            coordByNbAttaque[tabCoord[coord]] = '<span title="'+tabCoordHeures[coord]+'">'+coord +'</span> ';
+            coordByNbAttaque[tabCoord[coord]] = '<span title="'+tabCoordHeures[coord]+'">'+coord +'</span><br/> ';
         }
         else
         {
-            coordByNbAttaque[tabCoord[coord]] +='<span title="'+tabCoordHeures[coord]+'">'+coord +'</span> ';
+            coordByNbAttaque[tabCoord[coord]] +='<span title="'+tabCoordHeures[coord]+'">'+coord +'</span><br/>  ';
         }
 
         // pour l'alert
@@ -153,19 +153,26 @@ function showAlert()
     }
     if ( isGood ) { alert(good); }
     else { alert(notGood) }
-    // Je triche c'est mal, a maj 
-    var htmlCount = '<div id="promotionCountdownBox"><a class="overlay">';
+
+    var htmlCount = '<div ><a class="overlay" style="color: #FFF;text-decoration: none;font: 11px Verdana,Arial,Helvetica,sans-serif;width: 150px;text-align: center;background: transparent -moz-linear-gradient(center top , #171D23 0px, #101419 100%) repeat scroll 0% 0%;border: 1px solid #3F3D13;border-radius: 5px;padding: 5px;display: block;">';
 
     for (var count in coordByNbAttaque )
     {
-        htmlCount += count +' attaques :  <br />' + coordByNbAttaque[count] + ' <br/>';
+        if ( count == "1")
+        {
+            htmlCount += count +' attaque :  <br />' + coordByNbAttaque[count] + ' <br/>';
+        }
+        else
+        {
+            htmlCount += count +' attaques :  <br />' + coordByNbAttaque[count] + ' <br/>'; 
+        }
     }
 
     htmlCount += '</a></div>';
 var info = document.createElement("div");
 info.className="adviceWrapper";
 info.innerHTML=htmlCount;
-alert(htmlCount);
+
 var link = document.getElementById("links");
 link.appendChild(info);
 
