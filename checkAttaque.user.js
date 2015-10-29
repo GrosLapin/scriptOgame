@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name        Test
+// @name        CheckAttaque
 // @namespace   groslapin_s_136_fr
-// @description test
+// @description Plug in anty bash
 // @include     *ogame.gameforge.com/game/*
-// @version     1
+// @version     1.02
 // @grant       none
 
 // ==/UserScript==
