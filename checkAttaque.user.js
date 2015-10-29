@@ -2,7 +2,7 @@
 // @name        Test
 // @namespace   groslapin_s_136_fr
 // @description test
-// @include     *
+// @include     *ogame.gameforge.com/game/*
 // @version     1
 // @grant       none
 
