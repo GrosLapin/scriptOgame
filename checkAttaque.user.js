@@ -3,7 +3,7 @@
 // @namespace   groslapin_s_136_fr
 // @description Plug in anty bash
 // @include     *ogame.gameforge.com/game/*
-// @version     2.15
+// @version     2.2
 // @grant       none
 
 // ==/UserScript==
@@ -70,7 +70,26 @@ function isAppendedToday(date)
 }
 function showAlert()
 {
-    
+
+	var info = document.createElement("div");
+	info.className="adviceWrapper";
+	info.innerHTML='<div style="algin:center;text-align: center;"><img src="https://raw.githubusercontent.com/GrosLapin/scriptOgame/master/ajax-loader.gif" /></div>';
+	info.id="id_check_attaque";
+
+	var link = document.getElementById("links");
+
+	var conteneur =  document.getElementById('id_check_attaque');
+	if (typeof(conteneur) == 'undefined' || conteneur == null)
+	{
+		link.appendChild(info);
+	}
+	else
+	{
+		link.replaceChild(info,conteneur);
+	}
+	
+	
+    var maxRaid=6;
     var div =  document.getElementById("verificationAttaque");
     div.innerHTML = getMessage(1);
 
@@ -142,7 +161,7 @@ function showAlert()
         }
 
         // pour l'alert
-        if ( tabCoord[coord] >= 6 )
+        if ( tabCoord[coord] >= maxRaid )
         {
             isGood =false;
         }
@@ -169,7 +188,7 @@ function showAlert()
         {
             htmlCount += count +' attaque :  <br />' + coordByNbAttaque[count] + ' <br/>';
         }
-        else if (count < 6 )
+        else if (count < maxRaid )
         {
             htmlCount += count +' attaques :  <br />' + coordByNbAttaque[count] + ' <br/>'; 
         }
@@ -183,12 +202,22 @@ function showAlert()
     }
 
     htmlCount += '</a></div>';
-var info = document.createElement("div");
-info.className="adviceWrapper";
-info.innerHTML=htmlCount;
+	var info = document.createElement("div");
+	info.className="adviceWrapper";
+	info.id="id_check_attaque";
+	info.innerHTML=htmlCount;
 
-var link = document.getElementById("links");
-link.appendChild(info);
+	var link = document.getElementById("links");
+
+	var conteneur =  document.getElementById('id_check_attaque');
+	if (typeof(conteneur) == 'undefined' || conteneur == null)
+	{
+		link.appendChild(info);
+	}
+	else
+	{
+		link.replaceChild(info,conteneur);
+	}
 
 }
 
