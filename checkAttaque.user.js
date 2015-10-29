@@ -3,7 +3,7 @@
 // @namespace   groslapin_s_136_fr
 // @description Plug in anty bash
 // @include     *ogame.gameforge.com/game/*
-// @version     2.2
+// @version     2.21
 // @grant       none
 
 // ==/UserScript==
@@ -24,7 +24,7 @@ barre.appendChild(li);
 function getMessage(page) {
 return $.ajax({
     type: 'POST',       
-    url: 'http://s136-fr.ogame.gameforge.com/game/index.php?page=messages&tab=21&ajax=1',
+    url: '/game/index.php?page=messages&tab=21&ajax=1',
     data: 'messageId=-1&tabid=21&action=107&pagination='+page+'&ajax=1',
     dataType: 'html',
     context: document.body,
