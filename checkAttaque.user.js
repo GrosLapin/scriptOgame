@@ -3,7 +3,7 @@
 // @namespace   groslapin_s_136_fr
 // @description Plug in anty bash
 // @include     *ogame.gameforge.com/game/*
-// @version     2
+// @version     2.1
 // @grant       none
 
 // ==/UserScript==
@@ -127,8 +127,6 @@ function showAlert()
         cpt++;
     }
     
-    var good = "Vous n'avez attaqué personne 6 fois ou plus dans les 24h.\nBon raid !";
-    var notGood = "Vous avez attaqué au moins 6 fois les coordonnées suivantes : ";
     var isGood =true;
     var coordByNbAttaque = {};
     for (var coord in tabCoord )
@@ -147,15 +145,21 @@ function showAlert()
         if ( tabCoord[coord] >= 6 )
         {
             isGood =false;
-            notGood += coord +" ";
         }
 
     }
-    if ( isGood ) { alert(good); }
-    else { alert(notGood) }
+
 
     var htmlCount = '<div ><a class="overlay" style="color: #FFF;text-decoration: none;font: 11px Verdana,Arial,Helvetica,sans-serif;width: 150px;text-align: center;background: transparent -moz-linear-gradient(center top , #171D23 0px, #101419 100%) repeat scroll 0% 0%;border: 1px solid #3F3D13;border-radius: 5px;padding: 5px;display: block;">';
-
+	 
+	if ( isGood ) 
+	{
+			htmlCount += '<span style="font-weight: bold; color: rgb(0, 128, 0); font-size: 16px;">Good</span><br/><br/>';
+	}
+	else
+	{
+			htmlCount += '<span style="font-weight: bold; color: rgb(128, 0, 0); font-size: 16px;";">Warning</span><br/><br/>';
+	}
     for (var count in coordByNbAttaque )
     {
         if ( count == "1")
