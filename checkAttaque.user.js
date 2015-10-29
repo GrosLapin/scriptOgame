@@ -3,7 +3,7 @@
 // @namespace   groslapin_s_136_fr
 // @description Plug in anty bash
 // @include     *ogame.gameforge.com/game/*
-// @version     1.02
+// @version     1.03
 // @grant       none
 
 // ==/UserScript==
