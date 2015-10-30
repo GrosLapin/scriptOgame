@@ -8,40 +8,33 @@
 
 // ==/UserScript==
 
-
-var btn = document.createElement("a");
-btn.innerHTML="Check Raid";
-btn.className="menubutton";
-btn.href ="javascript:"; // vieux hack je veux pas mettre "#" car ça fait bouger sur la page
-btn.addEventListener('click', function(){ showAlert() ;}, false);
-
-var li=document.createElement("li");
-li.appendChild(btn);
-
-var barre = document.getElementById("menuTableTools");
-barre.appendChild(li);
-
-function getMessage(page) {
-return $.ajax({
-    type: 'POST',       
-    url: '/game/index.php?page=messages&tab=21&ajax=1',
-    data: 'messageId=-1&tabid=21&action=107&pagination='+page+'&ajax=1',
-    dataType: 'html',
-    context: document.body,
-    global: false,
-    async:false,
-    success: function(data) {
-        return data;
-    }
-}).responseText;
-
+// cookie function
+function bake_cookie(name, value) {
+  var cookie = [name, '=', JSON.stringify(value), '; domain=.', window.location.host.toString(), '; path=/;'].join('');
+  document.cookie = cookie;
 }
 
-var div = document.createElement("div");
-div.id ="verificationAttaque";
-div.style.visibility = "hidden"
-document.body.appendChild(div);
+function read_cookie(name) {
+ var result = document.cookie.match(new RegExp(name + '=([^;]+)'));
+ result && (result = JSON.parse(result[1]));
+ return result;
+}
 
+// loading the "page" page from the message page
+function getMessage(page) {
+	return $.ajax({
+		type: 'POST',       
+		url: '/game/index.php?page=messages&tab=21&ajax=1',
+		data: 'messageId=-1&tabid=21&action=107&pagination='+page+'&ajax=1',
+		dataType: 'html',
+		context: document.body,
+		global: false,
+		async:false,
+		success: function(data) {
+			return data;
+		}
+	}).responseText;
+}
 
 function coordToUrl(coord)
 {
@@ -49,6 +42,7 @@ function coordToUrl(coord)
 	 var coordTab = coordClean.split(":");
 	 return '/game/index.php?page=galaxy&galaxy='+coordTab[0]+'&system='+coordTab[1]+'&position='+coordTab[2] ;
 }	
+
 function formateTitle(date,cpt)
 {
 	var jourFull  = date.split(" ")[0]; 
@@ -60,6 +54,7 @@ function formateTitle(date,cpt)
 	
 	return heure+'h'+minute+' le '+ jourFull + ' (p '+cpt+')';
 }
+
 function isAppendedToday(date)
 {
     var jourFull  = date.split(" ")[0].split("."); 
@@ -86,16 +81,38 @@ function isAppendedToday(date)
     //alert("date : "+date+"\nhier : "+hier +"\nraid : "+ raid);
     return raid > hier;
 }
-function showAlert()
+
+
+
+// button for checking
+var btn = document.createElement("a");
+btn.innerHTML="Check Raid";
+btn.className="menubutton";
+btn.href ="javascript:"; 				// i don't like href="#" it can make the page moving
+btn.addEventListener('click', function(){ displayInfo() ;}, false);
+var li=document.createElement("li");
+li.appendChild(btn);
+var barre = document.getElementById("menuTableTools");
+barre.appendChild(li);
+
+// create and hidden div for result storing and parsing
+var div = document.createElement("div");
+div.id ="verificationAttaque";
+div.style.visibility = "hidden"
+document.body.appendChild(div);
+
+
+
+function displayInfo()
 {
 
+	// display a loading gif
 	var info = document.createElement("div");
 	info.className="adviceWrapper";
 	info.innerHTML='<div style="algin:center;text-align: center;"><img src="https://raw.githubusercontent.com/GrosLapin/scriptOgame/master/ajax-loader.gif" /></div>';
 	info.id="id_check_attaque";
 
 	var link = document.getElementById("links");
-
 	var conteneur =  document.getElementById('id_check_attaque');
 	if (typeof(conteneur) == 'undefined' || conteneur == null)
 	{
@@ -107,10 +124,10 @@ function showAlert()
 	}
 	
 	
+	// seting some constant like the number of page in the message section
     var maxRaid=6;
     var div =  document.getElementById("verificationAttaque");
     div.innerHTML = getMessage(1);
-
     var litab = document.getElementsByClassName('paginator');
     var li = litab[litab.length -1];
     var maxPage = li.getAttribute("data-page");
@@ -119,17 +136,16 @@ function showAlert()
     var ok = true;
     var tabCoord = {};
     var tabCoordHeures = {};
+	// main loop
     while (cpt <= maxPage && ok )
     {
+		// store the HTML in hidden div
         div.innerHTML = getMessage(cpt);
         var lutab = document.getElementsByClassName('ctn_with_trash');
         var lu = lutab[lutab.length -1];
-    
-    
-      
-     
         var collEnfants = lu.childNodes;
 
+		// 1 of 2 child are not of your bisness, and the first is the < << >> > button so start at 3 and +2
         for (var i = 3; i < collEnfants.length; i=i+2) 
         {   
             var li = collEnfants[i];
@@ -163,7 +179,7 @@ function showAlert()
    
         cpt++;
     }
-    
+    // end of collecting data time for some display
     var isGood =true;
     var coordByNbAttaque = {};
     for (var coord in tabCoord )
