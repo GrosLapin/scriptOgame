@@ -8,18 +8,6 @@
 
 // ==/UserScript==
 
-// cookie function
-function bake_cookie(name, value) {
-  var cookie = [name, '=', JSON.stringify(value), '; domain=.', window.location.host.toString(), '; path=/;'].join('');
-  document.cookie = cookie;
-}
-
-function read_cookie(name) {
- var result = document.cookie.match(new RegExp(name + '=([^;]+)'));
- result && (result = JSON.parse(result[1]));
- return result;
-}
-
 // loading the "page" page from the message page
 function getMessage(page) {
 	return $.ajax({
@@ -89,7 +77,7 @@ var btn = document.createElement("a");
 btn.innerHTML="Check Raid";
 btn.className="menubutton";
 btn.href ="javascript:"; 				// i don't like href="#" it can make the page moving
-btn.addEventListener('click', function(){ displayInfo() ;}, false);
+btn.addEventListener('click', function(){ loadInfo() ;}, false);
 var li=document.createElement("li");
 li.appendChild(btn);
 var barre = document.getElementById("menuTableTools");
@@ -102,8 +90,15 @@ div.style.visibility = "hidden"
 document.body.appendChild(div);
 
 
+var tabCoord = $.parseJSON($.cookie("tabCoord"));
+if (tabCoord != 'undefined')
+{
+	
+	display();
 
-function displayInfo()
+}
+
+function loadInfo()
 {
 
 	// display a loading gif
@@ -125,7 +120,6 @@ function displayInfo()
 	
 	
 	// seting some constant like the number of page in the message section
-    var maxRaid=6;
     var div =  document.getElementById("verificationAttaque");
     div.innerHTML = getMessage(1);
     var litab = document.getElementsByClassName('paginator');
@@ -180,10 +174,24 @@ function displayInfo()
         cpt++;
     }
     // end of collecting data time for some display
+	$.cookie("tabCoord", JSON.stringify(tabCoord));
+	$.cookie('tabCoordHeures', JSON.stringify(tabCoordHeures));
+	display();
+}
+
+function display() {
+	var maxRaid = 6;
+		
+	var tabCoord = $.parseJSON($.cookie("tabCoord"));
+	var tabCoordHeures = $.parseJSON($.cookie("tabCoordHeures"));
+	console.log(tabCoord);
+	console.log(tabCoordHeures);
     var isGood =true;
     var coordByNbAttaque = {};
+
     for (var coord in tabCoord )
     {
+		
         // pour l'affichage en div
         if (typeof coordByNbAttaque[tabCoord[coord]] == 'undefined')
         {
@@ -202,7 +210,6 @@ function displayInfo()
 
     }
 
-
     var htmlCount = '<div ><span class="overlay" style="color: #FFF;text-decoration: none;font: 11px Verdana,Arial,Helvetica,sans-serif;width: 150px;text-align: center;background: transparent -moz-linear-gradient(center top , #171D23 0px, #101419 100%) repeat scroll 0% 0%;border: 1px solid #3F3D13;border-radius: 5px;padding: 5px;display: block;">';
 	 
 	if ( isGood ) 
@@ -216,6 +223,7 @@ function displayInfo()
 			htmlCount += '<span style="font-weight: bold; color: rgb(128, 0, 0); font-size: 16px;">Risque de bash</span>';
 			htmlCount += '<br/><br/>';
 	}
+
     for (var count in coordByNbAttaque )
     {
         if ( count == "1")
@@ -236,13 +244,16 @@ function displayInfo()
     }
 
     htmlCount += '</span></div>';
+
+
+	
+
 	var info = document.createElement("div");
 	info.className="adviceWrapper";
-	info.id="id_check_attaque";
 	info.innerHTML=htmlCount;
+	info.id="id_check_attaque";
 
 	var link = document.getElementById("links");
-
 	var conteneur =  document.getElementById('id_check_attaque');
 	if (typeof(conteneur) == 'undefined' || conteneur == null)
 	{
@@ -252,6 +263,8 @@ function displayInfo()
 	{
 		link.replaceChild(info,conteneur);
 	}
+
+
 
 }
 
