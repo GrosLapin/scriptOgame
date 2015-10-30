@@ -3,7 +3,7 @@
 // @namespace   groslapin_s_136_fr
 // @description Plug in anty bash
 // @include     *ogame.gameforge.com/game/*
-// @version     2.2
+// @version     2.3
 // @grant       none
 
 // ==/UserScript==
@@ -24,7 +24,7 @@ barre.appendChild(li);
 function getMessage(page) {
 return $.ajax({
     type: 'POST',       
-    url: 'http://s136-fr.ogame.gameforge.com/game/index.php?page=messages&tab=21&ajax=1',
+    url: '/game/index.php?page=messages&tab=21&ajax=1',
     data: 'messageId=-1&tabid=21&action=107&pagination='+page+'&ajax=1',
     dataType: 'html',
     context: document.body,
@@ -42,6 +42,24 @@ div.id ="verificationAttaque";
 div.style.visibility = "hidden"
 document.body.appendChild(div);
 
+
+function coordToUrl(coord)
+{
+	 var coordClean = coord.substring(1, coord.length-1); 
+	 var coordTab = coordClean.split(":");
+	 return '/game/index.php?page=galaxy&galaxy='+coordTab[0]+'&system='+coordTab[1]+'&position='+coordTab[2] ;
+}	
+function formateTitle(date,cpt)
+{
+	var jourFull  = date.split(" ")[0]; 
+    var heureFull = date.split(" ")[1].split(":");
+
+
+    var heure   = heureFull[0];
+    var minute  = heureFull[1]; 
+	
+	return heure+'h'+minute+' le '+ jourFull + ' (p '+cpt+')';
+}
 function isAppendedToday(date)
 {
     var jourFull  = date.split(" ")[0].split("."); 
@@ -124,12 +142,12 @@ function showAlert()
                 if (typeof tabCoord[coord] == 'undefined')
                 {
                     tabCoord[coord] = 1;
-                    tabCoordHeures[coord] = date.innerHTML +'\n';
+                    tabCoordHeures[coord] = formateTitle(date.innerHTML,cpt)+'\n';
                 }
                 else
                 {
                     tabCoord[coord] += 1;
-                    tabCoordHeures[coord] += date.innerHTML  +'\n';
+                    tabCoordHeures[coord] += formateTitle(date.innerHTML,cpt)+'\n';
                 }
 
             }
@@ -153,11 +171,11 @@ function showAlert()
         // pour l'affichage en div
         if (typeof coordByNbAttaque[tabCoord[coord]] == 'undefined')
         {
-            coordByNbAttaque[tabCoord[coord]] = '<span title="'+tabCoordHeures[coord]+'">'+coord +'</span><br/> ';
+            coordByNbAttaque[tabCoord[coord]] = '<a title="'+tabCoordHeures[coord]+'" href="'+coordToUrl(coord)+'" >'+coord +'</a><br/> ';
         }
         else
         {
-            coordByNbAttaque[tabCoord[coord]] +='<span title="'+tabCoordHeures[coord]+'">'+coord +'</span><br/>  ';
+            coordByNbAttaque[tabCoord[coord]] +='<a title="'+tabCoordHeures[coord]+'" href="'+coordToUrl(coord)+'">'+coord +'</a><br/>  ';
         }
 
         // pour l'alert
@@ -169,7 +187,7 @@ function showAlert()
     }
 
 
-    var htmlCount = '<div ><a class="overlay" style="color: #FFF;text-decoration: none;font: 11px Verdana,Arial,Helvetica,sans-serif;width: 150px;text-align: center;background: transparent -moz-linear-gradient(center top , #171D23 0px, #101419 100%) repeat scroll 0% 0%;border: 1px solid #3F3D13;border-radius: 5px;padding: 5px;display: block;">';
+    var htmlCount = '<div ><span class="overlay" style="color: #FFF;text-decoration: none;font: 11px Verdana,Arial,Helvetica,sans-serif;width: 150px;text-align: center;background: transparent -moz-linear-gradient(center top , #171D23 0px, #101419 100%) repeat scroll 0% 0%;border: 1px solid #3F3D13;border-radius: 5px;padding: 5px;display: block;">';
 	 
 	if ( isGood ) 
 	{
@@ -201,7 +219,7 @@ function showAlert()
 		}
     }
 
-    htmlCount += '</a></div>';
+    htmlCount += '</span></div>';
 	var info = document.createElement("div");
 	info.className="adviceWrapper";
 	info.id="id_check_attaque";
