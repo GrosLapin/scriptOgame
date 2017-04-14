@@ -12,8 +12,8 @@
 function getMessage(page) {
 	return $.ajax({
 		type: 'POST',       
-		url: '/game/index.php?page=messages&tab=21&ajax=1',
-		data: 'action=107&pagination='+page+'&ajax=1',
+		url: '/game/index.php?page=messages',
+		data: 'messageId=-1&tabid=21&action=107&pagination='+page+'&ajax=1',
 		dataType: 'html',
 		context: document.body,
 		global: false,
@@ -66,7 +66,7 @@ function isAppendedToday(date)
     raid.setHours(heure); 
     raid.setMinutes(minute);
     
-    //alert("date : "+date+"\nhier : "+hier +"\nraid : "+ raid);
+    //("date : "+date+"\nhier : "+hier +"\nraid : "+ raid);
     return raid > hier;
 }
 
@@ -140,7 +140,8 @@ function loadInfo()
         var lu = lutab[lutab.length -1];
         var collEnfants = document.getElementsByClassName('msg');
 
-	for (var i = 0; i < collEnfants.length; i=i+1) 
+		// 1 of 2 child are not of your bisness, and the first is the < << >> > button so start at 3 and +2
+        for (var i = 0; i < collEnfants.length; i=i+1) 
         {   
             var msg = collEnfants[i];
             var mesgtab = msg.getElementsByClassName('msg_date');
