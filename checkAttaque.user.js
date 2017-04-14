@@ -3,7 +3,7 @@
 // @namespace   groslapin_s_136_fr
 // @description Plug in anty bash
 // @include     *ogame.gameforge.com/game/*
-// @version     2.3
+// @version     2.4
 // @grant       none
 
 // ==/UserScript==
@@ -13,7 +13,7 @@ function getMessage(page) {
 	return $.ajax({
 		type: 'POST',       
 		url: '/game/index.php?page=messages&tab=21&ajax=1',
-		data: 'messageId=-1&tabid=21&action=107&pagination='+page+'&ajax=1',
+		data: 'action=107&pagination='+page+'&ajax=1',
 		dataType: 'html',
 		context: document.body,
 		global: false,
@@ -122,6 +122,7 @@ function loadInfo()
 	// seting some constant like the number of page in the message section
     var div =  document.getElementById("verificationAttaque");
     div.innerHTML = getMessage(1);
+
     var litab = document.getElementsByClassName('paginator');
     var li = litab[litab.length -1];
     var maxPage = li.getAttribute("data-page");
@@ -137,17 +138,17 @@ function loadInfo()
         div.innerHTML = getMessage(cpt);
         var lutab = document.getElementsByClassName('ctn_with_trash');
         var lu = lutab[lutab.length -1];
-        var collEnfants = lu.childNodes;
+        var collEnfants = document.getElementsByClassName('msg');
 
-		// 1 of 2 child are not of your bisness, and the first is the < << >> > button so start at 3 and +2
-        for (var i = 3; i < collEnfants.length; i=i+2) 
+	for (var i = 0; i < collEnfants.length; i=i+1) 
         {   
-            var li = collEnfants[i];
-            var mesgtab = li.getElementsByClassName('msg_date');
+            var msg = collEnfants[i];
+            var mesgtab = msg.getElementsByClassName('msg_date');
             var date = mesgtab[0];
+             
             if (isAppendedToday(date.innerHTML))
             {
-                var locTab = li.getElementsByClassName('txt_link'); 
+                var locTab = msg.getElementsByClassName('txt_link'); 
                 var coord = locTab[0].innerHTML;
                 if (typeof tabCoord[coord] == 'undefined')
                 {
